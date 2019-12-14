@@ -1,0 +1,19 @@
+.Home {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.Home-wrapper {
+    display: inline-block;
+    width: 250px;
+    height: 150px;
+    text-align: center;
+    line-height: 150px;
+    color: #FFF;
+}
+
+.Home-card {
+    
+}

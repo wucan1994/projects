@@ -1,9 +1,10 @@
 import React from 'react';
 import {hot} from 'react-hot-loader';
+import Navbar from './components/navbar';
 
 function App() {
     return (
-        <div>Hello world!</div>
+        <Navbar></Navbar>
     )
 }
 

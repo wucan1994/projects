@@ -1,0 +1,11 @@
+.Sidebar {
+    width: 200px;
+    height: 100%;
+    border-right: lightblue 1px solid;
+    text-align: center;
+    overflow: auto;
+}
+
+.Sidebar-item {
+    margin-top: 20px;
+}
