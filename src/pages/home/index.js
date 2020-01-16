@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import HttpClient from '../../common/httpClient';
+import { REMOTE_SERVER } from '../../config/index'; 
 import './index.css';
 
 const CARDS = [
@@ -12,6 +14,19 @@ const CARDS = [
 
 function Home() {
     const cards = CARDS;
+
+    HttpClient.request({
+        method: 'get',
+        url: `${REMOTE_SERVER}/home`,
+        data: {},
+        success: res => {
+            console.log('res', res);
+        },
+        fail: () => {
+            console.log('something went wrong');
+        }
+    });
+
     return (
         <div className="Home">
             {

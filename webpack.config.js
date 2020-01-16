@@ -14,7 +14,17 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ["style-loader", "css-loader"]
+                use: [
+                    "style-loader",
+                    "css-loader",
+                    {
+                        loader: 'px2rem-loader',
+                        options: {
+                            remUnit: 75,
+                            remPrecision: 8
+                        }
+                    }
+                ]
             }
         ]
     },
@@ -26,7 +36,7 @@ module.exports = {
     },
     devServer: {
         contentBase: path.join(__dirname, "public/"),
-        port: 3000,
+        port: 4000,
         publicPath: "http://localhost:3000/dist/",
         hotOnly: true
     },
