@@ -7,6 +7,7 @@ function Navbar() {
         <div className="Navbar">
             <div className="Navbar-item"><Link to="/home">首页</Link></div>
             <div className="Navbar-item"><Link to="/mycenter">个人中心</Link></div>
+            <div className="Navbar-login"><Link to="/login">登录</Link></div>
         </div>
     )
 }

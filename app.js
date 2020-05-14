@@ -1,4 +1,3 @@
-var server = require('./server');
-var router = require('./routes');
+var server = require('./server/index');
 
-server.start(router.route);
+server.start();

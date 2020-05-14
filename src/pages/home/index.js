@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import HttpClient from '../../common/httpClient';
-import { REMOTE_SERVER } from '../../config/index'; 
+import { REMOTE_SERVER } from '../../config/index';
 import './index.css';
 
 const CARDS = [
-    { name: '精彩推荐', color: '#CBFF47' },
+    { name: '精彩推荐', color: '#CBFF47', tag: '<script />' },
     { name: '精彩推荐', color: '#FFF347' },
     { name: '精彩推荐', color: '#47FFA0' },
     { name: '精彩推荐', color: '#AEECEF' },
@@ -27,18 +27,59 @@ function Home() {
         }
     });
 
+    
+
+    // var x, y, n = 0, ny = 0, rotINT, rotYINT
+    // function rotateDIV() {
+    //     x = document.getElementById("rotate1")
+    //     clearInterval(rotINT)
+    //     rotINT = setInterval("startRotate()", 10)
+    // }
+    // function rotateYDIV() {
+    //     y = document.getElementById("rotatey1")
+    //     clearInterval(rotYINT)
+    //     rotYINT = setInterval("startYRotate()", 10)
+    // }
+    // function startRotate() {
+    //     n = n + 1
+    //     x.style.transform = "rotate(" + n + "deg)"
+    //     x.style.webkitTransform = "rotate(" + n + "deg)"
+    //     x.style.OTransform = "rotate(" + n + "deg)"
+    //     x.style.MozTransform = "rotate(" + n + "deg)"
+    //     if (n == 180 || n == 360) {
+    //         clearInterval(rotINT)
+    //         if (n == 360) { n = 0 }
+    //     }
+    // }
+    // function startYRotate() {
+    //     ny = ny + 1
+    //     y.style.transform = "rotateY(" + ny + "deg)"
+    //     y.style.webkitTransform = "rotateY(" + ny + "deg)"
+    //     y.style.OTransform = "rotateY(" + ny + "deg)"
+    //     y.style.MozTransform = "rotateY(" + ny + "deg)"
+    //     if (ny == 180 || ny >= 360) {
+    //         clearInterval(rotYINT)
+    //         if (ny >= 360) { ny = 0 }
+    //     }
+    // }
+
     return (
         <div className="Home">
-            {
-                cards.map(item => {
-                    return (
-                        <div className="Home-wrapper">
-                            <div className="Home-card" style={{backgroundColor: item.color}}>{item.name}</div>
-                        </div>
-                    )
+            <div className="Home-top">
+                {
+                    cards.map(item => {
+                        return (
+                            <div className="Home-wrapper">
+                                <div className="Home-card">
+                                    <div className="Home-card-front"></div>
+                                    <div className="Home-card-back"></div>
+                                </div>
+                            </div>
+                        )
 
-                })
-            }
+                    })
+                }
+            </div>
         </div>
     )
 }

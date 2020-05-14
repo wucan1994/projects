@@ -4,8 +4,14 @@
     background: lightblue;
     display: flex;
     align-items: center;
+    position: fixed;
 }
 
 .Navbar-item {
     margin-left: 50px;
+}
+
+.Navbar-login {
+    position: absolute;
+    right: 50px;
 }

@@ -25,6 +25,13 @@ module.exports = {
                         }
                     }
                 ]
+            },{
+                test: /.(png|jpg|jpeg|gif)$/,
+                use: [
+                    {
+                        loader: 'url-loader'
+                    }
+                ]
             }
         ]
     },
@@ -38,7 +45,8 @@ module.exports = {
         contentBase: path.join(__dirname, "public/"),
         port: 4000,
         publicPath: "http://localhost:3000/dist/",
-        hotOnly: true
+        hotOnly: true,
+        historyApiFallback: true
     },
     plugins: [new webpack.HotModuleReplacementPlugin()]
 };
