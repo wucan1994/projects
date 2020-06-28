@@ -1,3 +1,3 @@
-var server = require('./server/index');
+const server = require('./server/index');
 
 server.start();

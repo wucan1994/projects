@@ -1,17 +1,41 @@
-.Navbar {
-    width: 100%;
-    height: 100px;
-    background: lightblue;
-    display: flex;
-    align-items: center;
-    position: fixed;
-}
-
-.Navbar-item {
-    margin-left: 50px;
-}
-
-.Navbar-login {
+.navbar {
+    width: 200px;
+    height: 100%;
+    padding-top: 30px;
+    padding-left: 50px;
     position: absolute;
-    right: 50px;
+    left: 0;
+    top: 0;
+}
+
+ul, li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    height: 70px;
+    font-size: 24px;
+    color: blue;
+}
+
+a {
+    text-decoration: none;
+    color: cornflowerblue; 
+}
+
+a:hover {
+    color: indianred;
+}
+
+li .active {
+    color: indianred;
+}
+
+.navbar-mine {
+    padding-top: 30px;
+    padding-left: 30px;
+}
+
+.navbar-mine li {
+    height: 50px;
+    font-size: 22px;
 }

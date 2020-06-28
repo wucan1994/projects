@@ -1,13 +1,50 @@
 import React from 'react';
-import Sidebar from '../../components/sidebar';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import HttpClient from '../../common/httpClient';
+import config from '../../config/index';
+import { mycenterLogin } from './action';
 import './index.css';
 
-function MyCenter() {
-    return (
-        <div className="mycenter">
-            <Sidebar></Sidebar>
-        </div>
-    )
+class MyCenter extends React.Component {
+  componentDidMount() {
+    this.checkLoginStatus();
+  }
+
+  checkLoginStatus() {
+    const { changeLoginStatus } = this.props;
+
+    HttpClient.request({
+      url: `${config.REMOTE_SERVER}/mycenter`,
+      method: 'get',
+      data: {},
+      success: (res) => {
+        if (res.error === 0 && res.data) {
+          changeLoginStatus(true);
+        }
+      },
+      fail: () => {},
+    });
+  }
+
+  render() {
+    const { isLogin } = this.props;
+
+    return isLogin ? <div>登录了</div> : <div>没登录</div>;
+  }
 }
 
-export default MyCenter;
+const mapStateToProps = (state) => ({
+  isLogin: state.isLogin,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  changeLoginStatus: (payload) => dispatch(mycenterLogin(payload)),
+});
+
+MyCenter.propTypes = {
+  isLogin: PropTypes.bool.isRequired,
+  changeLoginStatus: PropTypes.func.isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyCenter);

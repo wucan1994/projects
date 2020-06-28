@@ -1,59 +1,101 @@
-const mysql = require('mysql');
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Xfb19930107',
-    port: '3306',
-    database: 'mylife'
-});
-connection.connect();
-
-function route(pathname, response, params = {}) {
-    switch (pathname) {
-        case '/login':
-            login(response, params);
-            break;
-        case '/register':
-            register();
-            break;
-        default:
-            break;
-    }
-}
+const db = require('./database');
+const Session = require('./session');
 
 // 用户登录
 async function login(res, params) {
-    const sql = `SELECT * FROM user WHERE user_name = "${params.name}"`;
-    const result = await queryDB(sql);
+  const sql = `SELECT * FROM user WHERE user_name = "${params.name}"`;
+  const result = await db.queryDB(sql);
 
-    if (result.length === 1 && params.pwd === result[0].user_pwd) {
-        res.end(JSON.stringify({
-            msg: '登录成功'
-        }));
+  if (result.length === 1 && params.pwd === result[0].user_pwd) {
+    const maxAge = 36000;
+    const insertSql = `INSERT INTO mylife.session (session_expire) VALUES ("${Date.now() + maxAge}")`;
+    const insertResult = await db.queryDB(insertSql);
+
+    if (insertResult.affectedRows === 1 && insertResult.insertId) {
+      res.setHeader('Set-Cookie', [`sessionId=${insertResult.insertId}`, 'Path=/', 'HttpOnly', `Max-Age=${maxAge}`]);
+      res.end(JSON.stringify({
+        error: 0,
+        data: result[0],
+        msg: '登录成功',
+      }));
     } else {
-        res.end(JSON.stringify({
-            msg: '登录失败，用户名或密码错误'
-        }));
+      res.end(JSON.stringify({
+        error: -1,
+        data: {},
+        msg: '登录失败，数据库写入时发生错误',
+      }));
     }
+  } else {
+    res.end(JSON.stringify({
+      error: 0,
+      data: {},
+      msg: '登录失败，用户名或密码错误',
+    }));
+  }
 }
 
-// 查询数据库
-function queryDB(sql) {
-    const promise = new Promise((resolve, reject) => {
-        connection.query(sql, (err, result) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(result);
-        });
-    });
+// 用户注册
+async function register(res, params) {
+  const sql = `SELECT * FROM user WHERE user_name = "${params.name}"`;
+  const result = await db.queryDB(sql);
 
-    promise.then(value => {
-        return value;
-    }).catch(err => {
-        return;
-    });
+  if (result.length) {
+    res.end(JSON.stringify({
+      error: 0,
+      data: {},
+      msg: '注册失败，用户名已存在',
+    }));
+  } else {
+    const insertSql = `INSERT INTO mylife.user (user_name, user_pwd, user_sex) VALUES ("${params.name}", "${params.pwd}", '2')`;
+    const insertResult = await db.queryDB(insertSql);
 
-    return promise;
+    if (insertResult.affectedRows === 1 && insertResult.insertId) {
+      res.end(JSON.stringify({
+        error: 0,
+        data: {},
+        msg: '注册成功！',
+      }));
+    }
+  }
 }
+
+// 在session表中查找cookie是否有效
+function checkSession(res, cookies) {
+  if (cookies.sessionId) {
+    const session = new Session(cookies.sessionId);
+    if (session.getSession()) {
+      // sessionId存在且在有效期内
+      res.end(JSON.stringify({
+        error: 0,
+        data: 1,
+        msg: '',
+      }));
+      return;
+    }
+  }
+  res.end(JSON.stringify({
+    error: 0,
+    data: 0,
+    msg: '登录态失效',
+  }));
+}
+
+function route(pathname, response, params = {}, cookies = {}) {
+  switch (pathname) {
+    case '/mycenter':
+      checkSession(response, cookies);
+      break;
+    case '/login':
+      login(response, params);
+      break;
+    case '/register':
+      register(response, params);
+      break;
+    case '/header':
+      break;
+    default:
+      break;
+  }
+}
+
 module.exports = route;
