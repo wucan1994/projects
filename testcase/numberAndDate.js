@@ -473,6 +473,151 @@ const compareVersionCase = [
   },
 ];
 
+const weeekDayCase = [
+  {
+    description: '非法数日',
+    input: undefined,
+    result: DEFAULT_VALUE,
+  },
+  {
+    description: '非法日期',
+    input: 201909200,
+    result: DEFAULT_VALUE,
+  },
+  {
+    description: '不存在的日期',
+    input: 20190229,
+    result: DEFAULT_VALUE,
+  },
+  {
+    description: '正常日期——周一',
+    input: 20200101,
+    result: '三',
+  },
+  {
+    description: '正常日期——2020年2月29日',
+    input: 20200229,
+    result: '六',
+  },
+  {
+    description: '正常日期——2021年5月28日',
+    input: 20210528,
+    result: '五',
+  },
+  {
+    description: '正常日期——2021年5月28日',
+    input: '20210528',
+    result: '五',
+  },
+];
+
+// 以2021年5月25日为例，如日期不对，请更新测试用例
+const transformDateCase = [
+  {
+    description: '非法输入',
+    input: '20199999',
+    result: DEFAULT_VALUE,
+  },
+  {
+    description: '今天——2021年5月25日',
+    input: '20210525',
+    result: '今天',
+  },
+  {
+    description: '昨天——2021年5月24日',
+    input: '20210524',
+    result: '昨天',
+  },
+  {
+    description: '最近一周——2021年5月23日',
+    input: '20210523',
+    result: '星期日',
+  },
+  {
+    description: '最近一周——2021年5月20日',
+    input: '20210520',
+    result: '星期四',
+  },
+  {
+    description: '最近一周——2021年5月18日',
+    input: '20210518',
+    result: '星期二',
+  },
+  {
+    description: '最近一周之前——2021年5月17日',
+    input: '20210517',
+    result: '2021-05-17',
+  },
+  {
+    description: '最近一周之前——2021年3月3日',
+    input: '20210303',
+    result: '2021-03-03',
+  },
+];
+
+const formatAmountCase = [
+  {
+    description: '非法输入——多个小数点',
+    input: '10.2.3',
+    result: DEFAULT_VALUE,
+  },
+  {
+    description: '非法输入——含有字母',
+    input: '1a',
+    result: DEFAULT_VALUE,
+  },
+  {
+    description: '小于1万的数字',
+    input: '10',
+    result: '10',
+  },
+  {
+    description: '小于1万的数字——临界值',
+    input: '9999.9',
+    result: '9999',
+  },
+  {
+    description: '1万',
+    input: '10000',
+    result: '1万',
+  },
+  {
+    description: '大于1万的数字——临界值',
+    input: '10001.1',
+    result: '1.0001万',
+  },
+  {
+    description: '大于1万的数字',
+    input: '50000',
+    result: '5万',
+  },
+  {
+    description: '大于1万的数字——99999000',
+    input: '99999000',
+    result: '9999.9万',
+  },
+  {
+    description: '大于1万的数字——临界值',
+    input: '99999999',
+    result: '9999.9999万',
+  },
+  {
+    description: '1亿',
+    input: '100000000',
+    result: '1亿',
+  },
+  {
+    description: '大于1亿的数字——余数小于1万',
+    input: '100009909',
+    result: '1亿',
+  },
+  {
+    description: '大于1亿的数字——余数大于1万',
+    input: '102300110',
+    result: '1.023亿',
+  },
+];
+
 export default {
   numberAndDateCase,
   dateCase,
@@ -481,4 +626,7 @@ export default {
   emptyCase,
   versionCase,
   compareVersionCase,
+  weeekDayCase,
+  transformDateCase,
+  formatAmountCase,
 };

@@ -9,6 +9,9 @@ const {
   checkIsEmpty,
   isValidVersion,
   isLaterVersion,
+  getWeekdayFromDate,
+  transformDate,
+  formatAmount,
 } = util;
 const {
   numberAndDateCase,
@@ -18,6 +21,9 @@ const {
   emptyCase,
   versionCase,
   compareVersionCase,
+  weeekDayCase,
+  transformDateCase,
+  formatAmountCase,
 } = cases;
 const { describe, test, expect } = global;
 
@@ -79,6 +85,33 @@ describe('比较当前版本是否在给定版本之后', () => {
   compareVersionCase.forEach((item) => {
     test(item.description, () => {
       const value = isLaterVersion(item.givenVersion, item.curVersion);
+      expect(value).toEqual(item.result);
+    });
+  });
+});
+
+describe('将给定日期转换为周几', () => {
+  weeekDayCase.forEach((item) => {
+    test(item.description, () => {
+      const value = getWeekdayFromDate(item.input);
+      expect(value).toEqual(item.result);
+    });
+  });
+});
+
+describe('格式化日期为今天、昨天、最近一周的星期几、xxxx年xx月xx日', () => {
+  transformDateCase.forEach((item) => {
+    test(item.description, () => {
+      const value = transformDate(item.input);
+      expect(value).toEqual(item.result);
+    });
+  });
+});
+
+describe('格式化金额为个、万、亿为单位', () => {
+  formatAmountCase.forEach((item) => {
+    test(item.description, () => {
+      const value = formatAmount(item.input);
       expect(value).toEqual(item.result);
     });
   });

@@ -135,6 +135,59 @@ const isLaterVersion = (givenVersion, curVersion) => {
   return false;
 };
 
+/**
+ * 获取指定日期是周几
+ * @param {number|string} date 输入的日期，格式为20190820这种
+ */
+const getWeekdayFromDate = (input) => {
+  const date = formatDate(input);
+  if (date === DEFAULT_VALUE) return date;
+  const weekdays = '日一二三四五六';
+  const standardDate = new Date(date);
+  const weekday = weekdays.split('')[standardDate.getDay()];
+  return weekday;
+};
+
+/**
+ * 格式化日期
+ * 当天：今天
+ * 昨天：昨天
+ * 最近一周&非当天&非昨天：星期X
+ * 其余均显示具体日期：YYYY-MM-DD
+ * @param {string} input 输入日期
+ * @returns string
+ */
+const transformDate = (input) => {
+  const date = formatDate(input);
+  if (date === DEFAULT_VALUE) return date;
+  const today = new Date().setHours(0, 0, 0, 0);
+  const yesterday = today - 24 * 3600 * 1000;
+  const recentWeek = today - 24 * 3600 * 1000 * 7;
+  const viewTime = new Date(date).getTime();
+  if (viewTime >= today) return '今天';
+  if (viewTime >= yesterday) return '昨天';
+  if (viewTime > recentWeek) return `星期${getWeekdayFromDate(input)}`;
+  return date;
+};
+
+/**
+ * 格式化金额
+ * @param {number | string} input 输入金额
+ * @returns string
+ */
+const formatAmount = (input) => {
+  if (!NUMBER_REGEX.test(input)) return DEFAULT_VALUE;
+  const num = parseInt(input, 10);
+  const WAN = 10 ** 4;
+  const YI = 10 ** 8;
+  if (num < 0) return DEFAULT_VALUE;
+  if (num < WAN) return `${num}`;
+  if (num < YI) return `${num / WAN}万`;
+  const mod = num % YI;
+  if (mod < WAN) return `${Math.floor(num / YI)}亿`;
+  return `${(Math.floor(num / WAN) * WAN) / YI}亿`;
+};
+
 export default {
   keepDecimal,
   formatDate,
@@ -144,4 +197,7 @@ export default {
   getHash,
   isValidVersion,
   isLaterVersion,
+  getWeekdayFromDate,
+  transformDate,
+  formatAmount,
 };
