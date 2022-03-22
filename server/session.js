@@ -6,10 +6,9 @@ class Session {
   }
 
   async getSession() {
-    const sql = `SELECT * FROM session WHERE session_id = "${this.sessionId}"`;
-    const result = await db.queryDB(sql);
+    const result = await db.querySession(this.sessionId);
 
-    if (result.length === 1 && result[0].expireTime < Date.now()) {
+    if (result) {
       // cookie有效，登录态有效
       return true;
     }

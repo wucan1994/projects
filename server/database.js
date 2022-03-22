@@ -25,4 +25,62 @@ function queryDB(sql) {
   return promise;
 }
 
-exports.queryDB = queryDB;
+/**
+ * 查询user表，判断用户是否存在
+ * @param {*} params
+ * @returns {number} -1: 用户不存在 0: 密码错误 1: 用户名和密码正确
+ */
+async function queryUserExist(params) {
+  const sql = `SELECT * FROM user WHERE user_name = "${params.name}"`;
+  const result = await queryDB(sql);
+
+  if (result.length) {
+    if (params.pwd === result[0].user_pwd) return 1;
+    return 0;
+  }
+
+  return -1;
+}
+
+// 写入user表
+async function insertUser(params) {
+  const insertSql = `INSERT INTO mylife.user (user_name, user_pwd, user_sex) VALUES ("${params.name}", "${params.pwd}", '2')`;
+  const insertResult = await queryDB(insertSql);
+
+  if (insertResult.affectedRows === 1 && insertResult.insertId) {
+    return true;
+  }
+
+  return false;
+}
+
+// 写入session表
+async function insertSession() {
+  const maxAge = 36000;
+  const insertSql = `INSERT INTO mylife.session (session_expire) VALUES ("${
+    Date.now() + maxAge
+  }")`;
+  const insertResult = await queryDB(insertSql);
+
+  if (insertResult.affectedRows === 1 && insertResult.insertId) {
+    return insertResult.insertId;
+  }
+
+  return null;
+}
+
+async function querySession(sessionId) {
+  const sql = `SELECT * FROM session WHERE session_id = "${sessionId}"`;
+  const result = await queryDB(sql);
+
+  if (result.length === 1 && result[0].expireTime < Date.now()) {
+    return true;
+  }
+
+  return false;
+}
+
+exports.queryUserExist = queryUserExist;
+exports.insertUser = insertUser;
+exports.querySession = querySession;
+exports.insertSession = insertSession;

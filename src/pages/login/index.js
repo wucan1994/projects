@@ -28,12 +28,8 @@ function Login() {
     });
   };
 
-  // const x = '2222&lt;script&gt;alert(1)&lt;/script&gt;';
-
   return (
     <div className="Login">
-      {/* <div>{x}</div> */}
-      {/* <div dangerouslySetInnerHTML={{ __html: x }} /> */}
       <form
         className="Login-form"
         onSubmit={(e) => {
