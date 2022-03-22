@@ -4,6 +4,7 @@ const webpack = require('webpack');
 module.exports = {
   entry: './src/index.js',
   mode: 'development',
+  devtool: 'inline-source-map',
   module: {
     rules: [
       {
@@ -25,7 +26,8 @@ module.exports = {
             },
           },
         ],
-      }, {
+      },
+      {
         test: /.(png|jpg|jpeg|gif)$/,
         use: [
           {
@@ -45,7 +47,7 @@ module.exports = {
     contentBase: path.join(__dirname, 'public/'),
     port: 4000,
     publicPath: 'http://localhost:3000/dist/',
-    hotOnly: true,
+    // hotOnly: true,
     historyApiFallback: true,
   },
   plugins: [new webpack.HotModuleReplacementPlugin()],
