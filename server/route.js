@@ -3,10 +3,11 @@ const Session = require('./session');
 
 // 用户登录
 async function login(res, params) {
-  const result = await db.queryUserExist(params);
+  const userId = await db.queryUserExist(params);
 
-  if (result == 1) {
-    const sessionId = await db.insertSession(params);
+  if (userId > 0) {
+    const sessionId = await db.insertSession(userId);
+    console.warn('sessionId', sessionId);
 
     if (sessionId) {
       const maxAge = 36000;
@@ -88,19 +89,14 @@ async function register(res, params) {
 }
 
 // 在session表中查找cookie是否有效
-function checkSession(res, cookies) {
+async function checkSession(res, cookies) {
   if (cookies.sessionId) {
     const session = new Session(cookies.sessionId);
-    if (session.getSession()) {
+    const sessionUserId = await session.getSession();
+    if (sessionUserId) {
       // sessionId存在且在有效期内，获取用户信息并返回
       // db.queryUserInfo()
-      res.end(
-        JSON.stringify({
-          error: 0,
-          data: 1,
-          msg: '',
-        })
-      );
+      getUserInfo(res, sessionUserId);
       return;
     }
   }
@@ -111,6 +107,33 @@ function checkSession(res, cookies) {
       msg: '登录态失效',
     })
   );
+}
+
+/**
+ * 根据userId获取用户信息
+ * @param {number} userId 用户id
+ */
+async function getUserInfo(res, userId) {
+  if (userId) {
+    const userInfo = await db.queryUserInfo(userId);
+    if (userInfo) {
+      res.end(
+        JSON.stringify({
+          error: 0,
+          data: userInfo,
+          msg: '',
+        })
+      );
+    } else {
+      res.end(
+        JSON.stringify({
+          error: -1,
+          data: {},
+          msg: '发生错误',
+        })
+      );
+    }
+  }
 }
 
 function route(pathname, response, params = {}, cookies = {}) {
