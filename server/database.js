@@ -54,12 +54,19 @@ async function insertUser(params) {
   return false;
 }
 
-// 写入session表
-async function insertSession() {
+/**
+ * 写入session表
+ * @param {*} params
+ * @returns {number | null} sessionId
+ */
+async function insertSession(params) {
   const maxAge = 36000;
-  const insertSql = `INSERT INTO mylife.session (session_expire) VALUES ("${
+  // 更新用户的session_expire
+  const insertSql = `INSERT INTO mylife.session (session_username, session_expire) VALUES ("${
+    params.name
+  }", "${
     Date.now() + maxAge
-  }")`;
+  }") ON DUPLICATE KEY UPDATE session_expire=VALUES(session_expire)`;
   const insertResult = await queryDB(insertSql);
 
   if (insertResult.affectedRows === 1 && insertResult.insertId) {

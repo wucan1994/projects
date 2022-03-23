@@ -6,7 +6,7 @@ async function login(res, params) {
   const result = await db.queryUserExist(params);
 
   if (result == 1) {
-    const sessionId = await db.insertSession();
+    const sessionId = await db.insertSession(params);
 
     if (sessionId) {
       const maxAge = 36000;
@@ -92,7 +92,8 @@ function checkSession(res, cookies) {
   if (cookies.sessionId) {
     const session = new Session(cookies.sessionId);
     if (session.getSession()) {
-      // sessionId存在且在有效期内
+      // sessionId存在且在有效期内，获取用户信息并返回
+      // db.queryUserInfo()
       res.end(
         JSON.stringify({
           error: 0,
