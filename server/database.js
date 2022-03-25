@@ -26,9 +26,9 @@ function queryDB(sql) {
 }
 
 /**
- * 查询user表，判断用户是否存在
+ * 查询user表，判断用户是否存在，存在则返回用户id，不存在则返回错误码
  * @param {*} params
- * @returns {number} -1: 用户不存在 0: 密码错误 1: 用户名和密码正确
+ * @returns {number} -1: 用户不存在 0: 密码错误 其他: 用户id
  */
 async function queryUserExist(params) {
   const sql = `SELECT * FROM user WHERE user_name = "${params.name}"`;
@@ -42,6 +42,11 @@ async function queryUserExist(params) {
   return -1;
 }
 
+/**
+ * 查询用户信息
+ * @param {number} userId 用户id
+ * @returns {Object | null}
+ */
 async function queryUserInfo(userId) {
   const sql = `SELECT * FROM mylife.user WHERE user_id="${userId}"`;
   const result = await queryDB(sql);
@@ -53,12 +58,16 @@ async function queryUserInfo(userId) {
   return null;
 }
 
-// 写入user表
+/**
+ * 写入用户表
+ * @param {Object} params 用户信息
+ * @returns {boolean} 是否注册成功
+ */
 async function insertUser(params) {
   const insertSql = `INSERT INTO mylife.user (user_name, user_pwd, user_sex) VALUES ("${params.name}", "${params.pwd}", '2')`;
   const insertResult = await queryDB(insertSql);
 
-  if (insertResult.affectedRows === 1 && insertResult.insertId) {
+  if (insertResult.insertId) {
     return true;
   }
 

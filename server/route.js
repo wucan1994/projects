@@ -1,13 +1,20 @@
 const db = require('./database');
 const Session = require('./session');
 
+// 默认返回内容
+const defaultResBody = {
+  error: 0,
+  data: {},
+  msg: '',
+};
+
 // 用户登录
 async function login(res, params) {
+  const resBody = { ...defaultResBody };
   const userId = await db.queryUserExist(params);
 
   if (userId > 0) {
     const sessionId = await db.insertSession(userId);
-    console.warn('sessionId', sessionId);
 
     if (sessionId) {
       const maxAge = 36000;
@@ -18,95 +25,59 @@ async function login(res, params) {
         'HttpOnly',
         `Max-Age=${maxAge}`,
       ]);
-      res.end(
-        JSON.stringify({
-          error: 0,
-          data: {},
-          msg: '登录成功',
-        })
-      );
+      Object.assign(resBody, { msg: '登录成功' });
     } else {
-      res.end(
-        JSON.stringify({
-          error: -1,
-          data: {},
-          msg: '登录失败，数据库写入时发生错误',
-        })
-      );
+      Object.assign(resBody, {
+        error: -1,
+        msg: '登录失败，数据库写入时发生错误',
+      });
     }
-  } else if (result == 0) {
-    res.end(
-      JSON.stringify({
-        error: 0,
-        data: {},
-        msg: '登录失败，用户名或密码错误',
-      })
-    );
+  } else if (userId == 0) {
+    Object.assign(resBody, { msg: '登录失败，用户名或密码错误' });
   } else {
-    res.end(
-      JSON.stringify({
-        error: 0,
-        data: {},
-        msg: '用户不存在！',
-      })
-    );
+    Object.assign(resBody, { msg: '用户不存在！请注册！' });
   }
+  res.end(JSON.stringify(resBody));
 }
 
 // 用户注册
 async function register(res, params) {
-  const result = await db.queryUserExist(params);
+  const resBody = { ...defaultResBody };
+  const userId = await db.queryUserExist(params);
 
-  if (result == 0 || result == 1) {
-    res.end(
-      JSON.stringify({
-        error: 0,
-        data: {},
-        msg: '注册失败，用户名已存在',
-      })
-    );
+  if (userId >= 0) {
+    Object.assign(resBody, { msg: '注册失败，用户名已存在' });
   } else {
     const result = await db.insertUser(params);
 
     if (result) {
-      res.end(
-        JSON.stringify({
-          error: 0,
-          data: {},
-          msg: '注册成功！',
-        })
-      );
+      Object.assign(resBody, { msg: '注册成功！' });
     } else {
-      res.end(
-        JSON.stringify({
-          error: -1,
-          data: {},
-          msg: '注册失败！',
-        })
-      );
+      Object.assign(resBody, { msg: '注册失败!' });
     }
   }
+  res.end(JSON.stringify(resBody));
 }
 
 // 在session表中查找cookie是否有效
 async function checkSession(res, cookies) {
-  if (cookies.sessionId) {
-    const session = new Session(cookies.sessionId);
+  const resBody = { ...defaultResBody };
+  const { sessionId } = cookies;
+
+  if (sessionId) {
+    const session = new Session(sessionId);
     const sessionUserId = await session.getSession();
     if (sessionUserId) {
       // sessionId存在且在有效期内，获取用户信息并返回
-      // db.queryUserInfo()
       getUserInfo(res, sessionUserId);
-      return;
+    } else {
+      Object.assign(resBody, { msg: '请登录！' });
+      res.end(JSON.stringify(resBody));
     }
+  } else {
+    Object.assign(resBody, { msg: '请登录！' });
+    res.end(JSON.stringify(resBody));
   }
-  res.end(
-    JSON.stringify({
-      error: 0,
-      data: 0,
-      msg: '登录态失效',
-    })
-  );
 }
 
 /**
@@ -114,26 +85,23 @@ async function checkSession(res, cookies) {
  * @param {number} userId 用户id
  */
 async function getUserInfo(res, userId) {
+  const resBody = { ...defaultResBody };
+
   if (userId) {
     const userInfo = await db.queryUserInfo(userId);
+
     if (userInfo) {
-      res.end(
-        JSON.stringify({
-          error: 0,
-          data: userInfo,
-          msg: '',
-        })
-      );
+      Object.assign(resBody, { data: userInfo });
     } else {
-      res.end(
-        JSON.stringify({
-          error: -1,
-          data: {},
-          msg: '发生错误',
-        })
-      );
+      Object.assign(resBody, { msg: '获取用户信息出错' });
     }
+  } else {
+    Object.assign(resBody, {
+      code: '-1',
+      msg: '用户id错误',
+    });
   }
+  res.end(JSON.stringify(resBody));
 }
 
 function route(pathname, response, params = {}, cookies = {}) {
