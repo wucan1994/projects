@@ -1,7 +1,7 @@
 import React from 'react';
 import HttpClient from '../../common/httpClient';
 import config from '../../config/index';
-import './index.css';
+import './app.css';
 
 const CARDS = [
   { name: '精彩推荐', color: '#CBFF47', tag: '<script />' },
@@ -64,16 +64,14 @@ function Home() {
   return (
     <div className="Home">
       <div className="Home-top">
-        {
-          cards.map(() => (
-            <div className="Home-wrapper">
-              <div className="Home-card">
-                <div className="Home-card-front" />
-                <div className="Home-card-back" />
-              </div>
+        {cards.map(() => (
+          <div className="Home-wrapper">
+            <div className="Home-card">
+              <div className="Home-card-front" />
+              <div className="Home-card-back" />
             </div>
-          ))
-        }
+          </div>
+        ))}
       </div>
     </div>
   );

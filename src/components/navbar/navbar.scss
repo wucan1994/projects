@@ -1,0 +1,49 @@
+//设计稿尺寸大小，假如设计稿宽度750
+$baseDesignWidth: 40;
+
+@function pxToRem($val) {
+  @return $val / $baseDesignWidth;
+}
+
+.navbar {
+  width: pxToRem(200px);
+  height: 100%;
+  padding-top: pxToRem(30rem);
+  padding-left: pxToRem(50rem);
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+ul,
+li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  height: pxToRem(70rem);
+  font-size: pxToRem(24rem);
+  color: blue;
+}
+
+a {
+  text-decoration: none;
+  color: cornflowerblue;
+}
+
+a:hover {
+  color: indianred;
+}
+
+li .active {
+  color: indianred;
+}
+
+.navbar-mine {
+  padding-top: pxToRem(30px);
+  padding-left: pxToRem(30rem);
+}
+
+.navbar-mine li {
+  height: pxToRem(50rem);
+  font-size: pxToRem(22rem);
+}
