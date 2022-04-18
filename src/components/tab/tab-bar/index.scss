@@ -1,0 +1,20 @@
+//设计稿尺寸大小，假如设计稿宽度750
+$baseDesignWidth: 37.5;
+
+@function pxToRem($val) {
+  @return $val / $baseDesignWidth * 1rem;
+}
+
+.tab-bar {
+  display: flex;
+  flex-direction: row;
+}
+
+.tab-bar-item {
+  flex: 1;
+  height: pxToRem(42);
+  font-size: pxToRem(17);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
