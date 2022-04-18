@@ -8,6 +8,7 @@ $baseDesignWidth: 37.5;
 .tab-bar {
   display: flex;
   flex-direction: row;
+  border-bottom: 1px solid #f5f5f5;
 }
 
 .tab-bar-item {
@@ -15,6 +16,31 @@ $baseDesignWidth: 37.5;
   height: pxToRem(42);
   font-size: pxToRem(17);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.tab-bar-item-active {
+  color: #ffa500;
+}
+
+.tab-bar-item-emphasize {
+  width: pxToRem(16);
+  height: pxToRem(3);
+  background-color: #ffa500;
+  border-radius: pxToRem(2);
+  position: absolute;
+  bottom: 0;
+  animation: active 100ms;
+}
+
+@keyframes active {
+  from {
+    width: 0;
+  }
+  to {
+    width: pxToRem(16);
+  }
 }

@@ -6,6 +6,7 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
+  border-bottom: 1px solid #f5f5f5;
 }
 
 .tab-bar-item {
@@ -17,11 +18,49 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  position: relative;
+}
+
+.tab-bar-item-active {
+  color: #ffa500;
+}
+
+.tab-bar-item-emphasize {
+  width: 0.42667rem;
+  height: 0.08rem;
+  background-color: #ffa500;
+  border-radius: 0.05333rem;
+  position: absolute;
+  bottom: 0;
+  -webkit-animation: active 100ms;
+          animation: active 100ms;
+}
+
+@-webkit-keyframes active {
+  from {
+    width: 0;
+  }
+  to {
+    width: 0.42667rem;
+  }
+}
+
+@keyframes active {
+  from {
+    width: 0;
+  }
+  to {
+    width: 0.42667rem;
+  }
 }
 /*# sourceMappingURL=index.css.map */

@@ -1,11 +1,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React from 'react';
+import React, { useState } from 'react';
 import './index.css';
 
 export default function TabBar(props) {
   const { tabs = [], onClickTab } = props;
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const clickTab = (index) => {
+    setActiveIndex(index);
     onClickTab(index);
   };
 
@@ -16,9 +18,16 @@ export default function TabBar(props) {
         <div
           key={item}
           onClick={() => clickTab(index)}
-          className="tab-bar-item"
+          className={`tab-bar-item ${
+            index === activeIndex ? 'tab-bar-item-active' : ''
+          }`}
         >
-          <span>{item}</span>
+          <div>
+            <span>{item}</span>
+          </div>
+          {activeIndex === index ? (
+            <div className="tab-bar-item-emphasize" />
+          ) : null}
         </div>
       ))}
     </div>
